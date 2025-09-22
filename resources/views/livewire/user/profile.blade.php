@@ -75,16 +75,11 @@
                     <label class="block text-sm font-medium text-gray-700 mb-1">Jenis Kelamin</label>
                     <div class="relative">
                         <select wire:model.defer="jenis_kelamin"
-                            class="mt-1 block w-full rounded-xl border border-gray-300 shadow-sm px-3 py-2 pr-8 focus:border-blue-500 focus:ring focus:ring-blue-200 sm:text-sm transition appearance-none bg-white">
+                            class="mt-1 block w-full rounded-xl border border-gray-300 shadow-sm px-3 py-2 pr-8 focus:border-blue-500 focus:ring focus:ring-blue-200 sm:text-sm transition-none bg-white">
                             <option value="">-- Pilih --</option>
                             <option value="Pria">Pria</option>
                             <option value="Wanita">Wanita</option>
                         </select>
-                        <div class="pointer-events-none absolute inset-y-0 right-2 flex items-center pr-2 text-gray-400">
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
-                            </svg>
-                        </div>
                     </div>
                     @error('jenis_kelamin') <span class="text-red-600 text-sm">{{ $message }}</span> @enderror
                 </div>
@@ -114,11 +109,6 @@
                             <option value="Diploma">Diploma</option>
                             <option value="Sarjana">Sarjana</option>
                         </select>
-                        <div class="pointer-events-none absolute inset-y-0 right-2 flex items-center pr-2 text-gray-400">
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
-                            </svg>
-                        </div>
                     </div>
                     @error('jenjang_pendidikan') <span class="text-red-600 text-sm">{{ $message }}</span> @enderror
                 </div>
