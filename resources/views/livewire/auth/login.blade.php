@@ -136,13 +136,41 @@ new #[Layout('components.layouts.guest')] class extends Component {
                 </div>
 
                 {{-- Password --}}
-                <div>
+                {{-- Password --}}
+                <div x-data="{ show: false }" class="relative">
                     <label for="password" class="block text-sm md:text-base font-medium">Password</label>
-                    <input wire:model="password" type="password" id="password" required
-                        class="mt-2 w-full px-4 py-2 md:py-3 border border-gray-300 rounded-md shadow-sm text-sm md:text-base focus:outline-none focus:ring-2 focus:ring-red-500"
-                        placeholder="Masukkan password">
-                    @error('password') <p class="text-sm text-red-500 mt-1">{{ $message }}</p> @enderror
+                    <input 
+                        wire:model="password"
+                        :type="show ? 'text' : 'password'"
+                        id="password"
+                        required
+                        class="mt-2 w-full px-4 py-2 md:py-3 border border-gray-300 rounded-md shadow-sm text-sm md:text-base focus:outline-none focus:ring-2 focus:ring-red-500 pr-10"
+                        placeholder="Masukkan password"
+                    >
+
+                    <!-- Tombol untuk toggle show/hide -->
+                    <button type="button"
+                        @click="show = !show"
+                        class="absolute inset-y-0 right-0 flex items-center pr-3 mt-6 text-gray-500 focus:outline-none">
+                        <svg x-show="!show" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none"
+                            viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M2.458 12C3.732 7.943 7.523 5 12 5c4.477 0 8.268 2.943 9.542 7-1.274 4.057-5.065 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                        </svg>
+                        <svg x-show="show" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none"
+                            viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M13.875 18.825A10.05 10.05 0 0112 19c-4.477 0-8.268-2.943-9.542-7a9.972 9.972 0 013.203-4.548M9.88 9.88a3 3 0 104.24 4.24M6.1 6.1l11.8 11.8" />
+                        </svg>
+                    </button>
+
+                    @error('password')
+                        <p class="text-sm text-red-500 mt-1">{{ $message }}</p>
+                    @enderror
                 </div>
+
 
                 {{-- Captcha --}}
                 <div class="flex items-start gap-4 mt-2">
