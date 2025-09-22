@@ -1,0 +1,4 @@
+<?php 
+  header("location: https://internship.ssgsjogja.com");
+exit();
+?>

@@ -1,0 +1,25 @@
+{
+  "resources/css/app.css": {
+    "file": "assets/app-bJcP_ihE.css",
+    "src": "resources/css/app.css",
+    "isEntry": true
+  },
+  "resources/js/Landing.js": {
+    "file": "assets/Landing-Cv_eOCip.js",
+    "name": "Landing",
+    "src": "resources/js/Landing.js",
+    "isDynamicEntry": true
+  },
+  "resources/js/app.js": {
+    "file": "assets/app-Dq6okOF_.js",
+    "name": "app",
+    "src": "resources/js/app.js",
+    "isEntry": true,
+    "dynamicImports": [
+      "resources/js/Landing.js"
+    ],
+    "css": [
+      "assets/app-bJcP_ihE.css"
+    ]
+  }
+}
