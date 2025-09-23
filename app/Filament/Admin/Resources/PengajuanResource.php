@@ -21,7 +21,7 @@ class PengajuanResource extends Resource
 
     protected static ?string $navigationLabel = 'Pengajuan';
     protected static ?string $navigationIcon = 'heroicon-o-document-text';
-    protected static ?string $navigationGroup = 'Magang';
+    protected static ?string $navigationGroup = 'Manajemen HC';
 
     public static function form(Form $form): Form
     {

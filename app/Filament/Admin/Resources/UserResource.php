@@ -18,7 +18,8 @@ class UserResource extends Resource
 {
     protected static ?string $model = User::class;
 
-    protected static ?string $navigationIcon = '';
+    protected static ?string $navigationIcon = 'heroicon-o-users';
+    protected static ?string $navigationLabel = 'User';
     protected static ?string $navigationGroup = 'Manajemen User';
 
     public static function form(Form $form): Form
@@ -62,36 +63,14 @@ class UserResource extends Resource
                     ->dateTime()
                     ->sortable(),
             ])
-            ->headerActions([ // ⬅️ Tambahan di sini
-                Tables\Actions\Action::make('import')
-                    ->label('Import Excel')
-                    ->icon('heroicon-o-arrow-up-tray')
-                    ->color('success')
-                    ->form([
-                        Forms\Components\FileUpload::make('file')
-                            ->label('Upload Excel')
-                            ->acceptedFileTypes([
-                                'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-                                'application/vnd.ms-excel'
-                            ])
-                            ->required(),
-                    ])
-                    ->action(function (array $data) {
-                        if (!empty($data['file'])) {
-                            \Maatwebsite\Excel\Facades\Excel::import(
-                                new \App\Imports\MagangFullImport, 
-                                storage_path('app/public/' . $data['file'])
-                            );
-
-                            \Filament\Notifications\Notification::make()
-                                ->title('Data berhasil diimport!')
-                                ->success()
-                                ->send();
-                        }
-                    }),
-            ])
             ->filters([
-                //
+                Tables\Filters\SelectFilter::make('role')
+                    ->label('Role')
+                    ->options([
+                        'user' => 'User',
+                        'admin' => 'Admin',
+                        'HC' => 'HC',
+                    ]),
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
