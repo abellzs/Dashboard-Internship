@@ -19,7 +19,7 @@ class LowonganSeeder extends Seeder {
         ]);
 
         Lowongan::create([
-            'nama_unit' => 'Sekretaris',
+            'nama_unit' => 'Sekretaris & Public Relation',
             'deskripsi' => 'Mengelola administrasi perkantoran, seperti surat masuk dan keluar, dokumentasi kegiatan pimpinan dan perusahaan, persiapan rapat, serta pembuatan berita acara kegiatan pimpinan.',
             'major' => 'Administrasi Publik, Administrasi Perkantoran, Manajemen, Administrasi Bisnis',
             'ketersediaan' => 'Tersedia',
@@ -115,6 +115,15 @@ class LowonganSeeder extends Seeder {
             'ketersediaan' => 'Tersedia',
             'lokasi' => 'Sleman',
             'durasi' => 2,
+        ]);
+
+        Lowongan::create([
+            'nama_unit' => 'Telkom Infrastruktur Indonesia',
+            'deskripsi' => 'Membantu dalam pengelolaan aset infrastruktur, pemeliharaan jaringan, serta mendukung kegiatan operasional dan administrasi yang berkaitan dengan infrastruktur telekomunikasi.',
+            'major' => 'Teknik Elektro, Telekomunikasi',
+            'ketersediaan' => 'Tersedia',
+            'lokasi' => 'Yogyakarta',
+            'durasi' => 3,
         ]);
     }
 }
