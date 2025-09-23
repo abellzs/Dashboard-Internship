@@ -110,7 +110,7 @@ new #[Layout('components.layouts.guest')] class extends Component {
 <div class="min-h-screen flex flex-col bg-white text-gray-800">
 
     {{-- Konten Utama --}}
-    <div class="flex flex-col md:flex-row items-center justify-center flex-1 px-6 md:px-32 gap-28">
+    <div class="flex flex-col md:flex-row items-center justify-center flex-1 px-6 md:px-32 gap-28 ">
 
         {{-- Kiri: Gambar & Teks --}}
         <div class="hidden md:flex flex-col items-start justify-center max-w-xl ml-32 pr-5">
@@ -136,41 +136,45 @@ new #[Layout('components.layouts.guest')] class extends Component {
                 </div>
 
                 {{-- Password --}}
-                {{-- Password --}}
                 <div x-data="{ show: false }" class="relative">
                     <label for="password" class="block text-sm md:text-base font-medium">Password</label>
-                    <input 
-                        wire:model="password"
-                        :type="show ? 'text' : 'password'"
-                        id="password"
-                        required
-                        class="mt-2 w-full px-4 py-2 md:py-3 border border-gray-300 rounded-md shadow-sm text-sm md:text-base focus:outline-none focus:ring-2 focus:ring-red-500 pr-10"
-                        placeholder="Masukkan password"
-                    >
+                    
+                    <div class="relative mt-2">
+                        <input 
+                            wire:model="password"
+                            :type="show ? 'text' : 'password'"
+                            id="password"
+                            required
+                            class="w-full px-4 py-2 md:py-3 border border-gray-300 rounded-md shadow-sm text-sm md:text-base focus:outline-none focus:ring-2 focus:ring-red-500"
+                            placeholder="Masukkan password"
+                        >
 
-                    <!-- Tombol untuk toggle show/hide -->
-                    <button type="button"
-                        @click="show = !show"
-                        class="absolute inset-y-0 right-0 flex items-center pr-3 mt-6 text-gray-500 focus:outline-none">
-                        <svg x-show="!show" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none"
-                            viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M2.458 12C3.732 7.943 7.523 5 12 5c4.477 0 8.268 2.943 9.542 7-1.274 4.057-5.065 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                        </svg>
-                        <svg x-show="show" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none"
-                            viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M13.875 18.825A10.05 10.05 0 0112 19c-4.477 0-8.268-2.943-9.542-7a9.972 9.972 0 013.203-4.548M9.88 9.88a3 3 0 104.24 4.24M6.1 6.1l11.8 11.8" />
-                        </svg>
-                    </button>
+                        <!-- Tombol Toggle -->
+                        <button type="button"
+                            @click="show = !show"
+                            class="absolute inset-y-0 right-2 flex items-center justify-center w-12 text-gray-400 hover:text-red-500 transition duration-200 ease-in-out">
+                            <template x-if="show">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none"
+                                    viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
+                                    <path stroke-linecap="round" stroke-linejoin="round" 
+                                        d="M1.5 12s4-7.5 10.5-7.5S22.5 12 22.5 12s-4 7.5-10.5 7.5S1.5 12 1.5 12z" />
+                                    <circle cx="12" cy="12" r="3" />
+                                </svg>
+                            </template>
+                            <template x-if="!show">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none"
+                                    viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
+                                    <path stroke-linecap="round" stroke-linejoin="round" 
+                                        d="M3 3l18 18M10.5 10.5a3 3 0 014.243 4.243M1.5 12s4-7.5 10.5-7.5a10.48 10.48 0 018.486 4.223M19.071 19.071A10.478 10.478 0 0112 19.5C6 19.5 1.5 12 1.5 12c1.178-2.209 3.014-4.151 5.277-5.492" />
+                                </svg>
+                            </template>
+                        </button>
+                    </div>
 
                     @error('password')
                         <p class="text-sm text-red-500 mt-1">{{ $message }}</p>
                     @enderror
                 </div>
-
 
                 {{-- Captcha --}}
                 <div class="flex items-start gap-4 mt-2">
