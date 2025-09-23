@@ -10,26 +10,19 @@ use Livewire\Attributes\Layout;
 use Livewire\Attributes\Locked;
 use Livewire\Volt\Component;
 
-new #[Layout('components.layouts.auth')] class extends Component {
+new #[Layout('components.layouts.guest')] class extends Component {
     #[Locked]
     public string $token = '';
     public string $email = '';
     public string $password = '';
     public string $password_confirmation = '';
 
-    /**
-     * Mount the component.
-     */
     public function mount(string $token): void
     {
         $this->token = $token;
-
         $this->email = request()->string('email');
     }
 
-    /**
-     * Reset the password for the given user.
-     */
     public function resetPassword(): void
     {
         $this->validate([
@@ -38,9 +31,6 @@ new #[Layout('components.layouts.auth')] class extends Component {
             'password' => ['required', 'string', 'confirmed', Rules\Password::defaults()],
         ]);
 
-        // Here we will attempt to reset the user's password. If it is successful we
-        // will update the password on an actual user model and persist it to the
-        // database. Otherwise we will parse the error and return the response.
         $status = Password::reset(
             $this->only('email', 'password', 'password_confirmation', 'token'),
             function ($user) {
@@ -53,63 +43,68 @@ new #[Layout('components.layouts.auth')] class extends Component {
             }
         );
 
-        // If the password was successfully reset, we will redirect the user back to
-        // the application's home authenticated view. If there is an error we can
-        // redirect them back to where they came from with their error message.
-        if ($status != Password::PasswordReset) {
+        if ($status != Password::PASSWORD_RESET) {
             $this->addError('email', __($status));
-
             return;
         }
 
         Session::flash('status', __($status));
-
         $this->redirectRoute('login', navigate: true);
     }
-}; ?>
+};
+?>
 
-<div class="flex flex-col gap-6">
-    <x-auth-header :title="__('Reset password')" :description="__('Please enter your new password below')" />
+<div class="min-h-screen flex flex-col bg-white text-gray-800">
+    <div class="flex flex-col items-center justify-center flex-1 px-6 md:px-32">
+        <div class="w-full max-w-md bg-white border border-gray-200 rounded-xl shadow-md p-6 md:p-10 space-y-6">
+            
+            <h2 class="text-2xl font-bold text-center">Reset Password</h2>
+            <p class="text-sm text-center text-gray-600">
+                Masukkan password baru Anda untuk mengatur ulang akun.
+            </p>
 
-    <!-- Session Status -->
-    <x-auth-session-status class="text-center" :status="session('status')" />
+            @if (session('status'))
+                <div class="p-3 text-green-700 bg-green-100 border border-green-200 rounded">
+                    {{ session('status') }}
+                </div>
+            @endif
 
-    <form wire:submit="resetPassword" class="flex flex-col gap-6">
-        <!-- Email Address -->
-        <flux:input
-            wire:model="email"
-            :label="__('Email')"
-            type="email"
-            required
-            autocomplete="email"
-        />
+            <form wire:submit="resetPassword" class="space-y-5">
+                <div>
+                    <label for="email" class="block text-sm font-medium">Email</label>
+                    <input wire:model="email" type="email" id="email" required
+                        class="mt-2 w-full px-4 py-2 md:py-3 border border-gray-300 rounded-md shadow-sm text-sm md:text-base focus:outline-none focus:ring-2 focus:ring-red-500"
+                        placeholder="Contoh: email@witelyjs.com">
+                    @error('email') <p class="text-sm text-red-500 mt-1">{{ $message }}</p> @enderror
+                </div>
 
-        <!-- Password -->
-        <flux:input
-            wire:model="password"
-            :label="__('Password')"
-            type="password"
-            required
-            autocomplete="new-password"
-            :placeholder="__('Password')"
-            viewable
-        />
+                <div>
+                    <label for="password" class="block text-sm font-medium">Password Baru</label>
+                    <input wire:model="password" type="password" id="password" required
+                        class="mt-2 w-full px-4 py-2 md:py-3 border border-gray-300 rounded-md shadow-sm text-sm md:text-base focus:outline-none focus:ring-2 focus:ring-red-500"
+                        placeholder="Password Baru">
+                    @error('password') <p class="text-sm text-red-500 mt-1">{{ $message }}</p> @enderror
+                </div>
 
-        <!-- Confirm Password -->
-        <flux:input
-            wire:model="password_confirmation"
-            :label="__('Confirm password')"
-            type="password"
-            required
-            autocomplete="new-password"
-            :placeholder="__('Confirm password')"
-            viewable
-        />
+                <div>
+                    <label for="password_confirmation" class="block text-sm font-medium">Konfirmasi Password</label>
+                    <input wire:model="password_confirmation" type="password" id="password_confirmation" required
+                        class="mt-2 w-full px-4 py-2 md:py-3 border border-gray-300 rounded-md shadow-sm text-sm md:text-base focus:outline-none focus:ring-2 focus:ring-red-500"
+                        placeholder="Konfirmasi Password">
+                    @error('password_confirmation') <p class="text-sm text-red-500 mt-1">{{ $message }}</p> @enderror
+                </div>
 
-        <div class="flex items-center justify-end">
-            <flux:button type="submit" variant="primary" class="w-full">
-                {{ __('Reset password') }}
-            </flux:button>
+                <div>
+                    <button type="submit"
+                        class="w-full py-2 md:py-3 px-4 bg-gradient-to-r from-[#C1002A] to-[#0066B1] text-white rounded-md text-sm md:text-base font-semibold hover:opacity-90 transition">
+                        Reset Password
+                    </button>
+                </div>
+
+                <div class="text-center text-sm mt-2">
+                    <a href="{{ route('login') }}" class="text-blue-600 hover:underline">Kembali ke Login</a>
+                </div>
+            </form>
         </div>
-    </form>
+    </div>
 </div>
