@@ -1,5 +1,6 @@
 import defaultTheme from 'tailwindcss/defaultTheme'
 import plugin from 'tailwindcss/plugin'
+// import preset from './vendor/filament/filament/tailwind.config.preset'
 
 export default {
   content: [
@@ -7,6 +8,8 @@ export default {
     './resources/**/*.js',
     './resources/**/*.vue',
     './resources/views/livewire/**/*.blade.php',
+    './vendor/filament/**/*.blade.php',
+    './app/Filament/**/*.php',
   ],
   theme: {
     container: {
