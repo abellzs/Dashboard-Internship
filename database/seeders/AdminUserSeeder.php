@@ -25,5 +25,13 @@ class AdminUserSeeder extends Seeder
             'password' => Hash::make('ssgsyogya123'),
             'role' => 'hc',
         ]);
+
+        // User
+        User::create([
+            'name' => 'User SSGS',
+            'email' => 'user@ssgs.com',
+            'password' => Hash::make('password123'),
+            'role' => 'user',
+        ]);
     }
 }
