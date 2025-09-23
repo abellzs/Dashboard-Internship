@@ -34,7 +34,6 @@ Route::view('/forgot-password', 'livewire.auth.forgot-password')
     ->middleware('guest')
     ->name('password.request');
 
-
 // Route captcha
 Route::get('captcha', function () {
     return captcha_img();
