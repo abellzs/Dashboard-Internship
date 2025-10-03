@@ -392,7 +392,7 @@ class="relative">
                                 </span>
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{{ $p->unit_penempatan }}</td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{{ $p->durasi_magang}} bulan</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{{ $p->durasi_magang}}</td>
                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
                                 @if($filter === 'accepted' && $p->status === 'accepted')
                                     <input type="date"
