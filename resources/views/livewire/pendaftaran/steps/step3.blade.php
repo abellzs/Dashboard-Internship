@@ -15,11 +15,11 @@
         <label for="durasi" class="block font-semibold mb-1">Durasi Magang <span class="text-red-600">*</span></label>
         <select id="durasi" name="durasi" wire:model.defer="durasi" class="w-full px-4 py-2 border rounded">
             <option value="">Pilih Durasi Magang</option>
-            <option value="2 Bulan">2</option>
-            <option value="3 Bulan">3</option>
-            <option value="4 Bulan">4</option>
-            <option value="5 Bulan">5</option>
-            <option value="6 Bulan">6</option>
+            <option value="2 Bulan">2 Bulan</option>
+            <option value="3 Bulan">3 Bulan</option>
+            <option value="4 Bulan">4 Bulan</option>
+            <option value="5 Bulan">5 Bulan</option>
+            <option value="6 Bulan">6 Bulan</option>
         </select>
         @error('durasi') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
     </div>

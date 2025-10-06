@@ -127,9 +127,10 @@ class PendaftaranForm extends Component
 
     public function updatedCv()
     {
-        if (!$this->cv && !$this->cv_path) {
-            $this->addError('cv', 'File CV harus diupload');
-        }
+        $this->validate([
+            'cv' => 'required|file|mimes:pdf|max:2048',
+        ]);
+
         $this->cv_path = $this->cv->store('documents/tmp', 'public');
         session(['cv_path' => $this->cv_path]);
     }
@@ -215,7 +216,7 @@ class PendaftaranForm extends Component
                 'tanggal_mulai_usulan' => $this->mulai,
                 'tanggal_selesai_usulan' => $this->selesai,
                 'unit_penempatan' => $lowongan->nama_unit,
-                'durasi_magang' => $this->durasi,
+                'durasi_magang' => $this->durasi . ' bulan',
                 'alasan_pilih_telkom' => $this->alasan,
                 'bersedia' => $this->bersedia,
             ]);

@@ -76,7 +76,7 @@
             <p class="text-lg mb-6">Ikuti program magang kami untuk mendapatkan pengalaman langsung, mengasah kemampuanmu, dan terlibat dalam proyek nyata yang membawa perubahan.</p>
             <div class="flex gap-4 flex-wrap">
                 <a href="{{ route('login') }}" class="px-6 py-3 bg-primary text-white rounded-lg hover:bg-red-700">Apply Now</a>
-                <a href="https://wa.me/6282174144800" class="px-6 py-3 bg-white text-black rounded-lg hover:bg-gray-300">Contact Us</a>
+                <a href="https://wa.me/6282174144800" target="_blank" class="px-6 py-3 bg-white text-black rounded-lg hover:bg-gray-300">Contact Us</a>
             </div>
         </div>
     </section>

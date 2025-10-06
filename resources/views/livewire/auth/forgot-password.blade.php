@@ -4,7 +4,8 @@ use Illuminate\Support\Facades\Password;
 use Livewire\Attributes\Layout;
 use Livewire\Volt\Component;
 
-new #[Layout('components.layouts.hc.app')] class extends Component {
+new #[Layout('components.layouts.guest')] class extends Component {
+
     public string $email = '';
 
     public function sendPasswordResetLink(): void
@@ -50,8 +51,6 @@ new #[Layout('components.layouts.hc.app')] class extends Component {
                         Kirim Link Reset
                     </button>
                 </div>
-
-                <div class="bg-red-500 text-white p-4">Test Tailwind</div>
 
                 <div class="text-center text-sm mt-2">
                     <a href="{{ route('login') }}" class="text-blue-600 hover:underline">Kembali ke Login</a>

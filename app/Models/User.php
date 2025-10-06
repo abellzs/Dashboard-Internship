@@ -8,9 +8,11 @@ use Laravel\Sanctum\HasApiTokens;
 use App\Models\magangApplication;
 use App\Models\UserProfile;
 use App\Models\MagangDocument;
+use Filament\Models\Contracts\FilamentUser;
+use Filament\Panel;
 
 
-class User extends Authenticatable
+class User extends Authenticatable implements FilamentUser
 {
     use HasApiTokens, Notifiable;
 
@@ -75,5 +77,15 @@ class User extends Authenticatable
         return $this->role === 'hc';
     }
 
+    public function canAccessPanel(Panel $panel): bool
+    {
+        // Izinkan akses panel admin untuk user dengan role admin atau hc
+        if ($panel->getId() === 'admin') {
+            return $this->isAdmin();
+        }
+
+        // Untuk panel lainnya, izinkan semua user yang sudah login
+        return true;
+    }
 
 }
