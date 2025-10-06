@@ -8,6 +8,8 @@
         @include('hc.dashboard')
     @elseif($page === 'data-peserta')
         @include('hc.data-peserta')
+    @elseif($page === 'presensi')
+        @include('hc.presensi')
     @elseif($page === 'tinjau-nanti')
         @include('hc.tinjau-nanti')
     @elseif($page === 'dokumen-peserta')

@@ -1,9 +1,12 @@
 <?php
 
 use App\Http\Controllers\Auth\VerifyEmailController;
+use App\Livewire\LoginPresensi as AuthLoginPresensi;
+use App\Livewire\LoginPresensi;
 use Illuminate\Support\Facades\Route;
 use Livewire\Volt\Volt;
 use App\Livewire\Auth\Register;
+use App\Livewire\PresensiMenu;
 
 Route::middleware('guest')->group(function () {
     Volt::route('login', 'auth.login')
@@ -30,7 +33,6 @@ Route::middleware('auth')->group(function () {
 
     Volt::route('confirm-password', 'auth.confirm-password')
         ->name('password.confirm');
-
 });
 
 Route::post('logout', App\Livewire\Actions\Logout::class)

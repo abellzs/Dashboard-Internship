@@ -1,29 +1,22 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use Illuminate\Support\Facades\Auth;
-use Livewire\Volt\Volt;
-use Mews\Captcha\Facades\Captcha;
 
 // User Controller & Livewire
 use App\Http\Controllers\User\DashboardController;
-use App\Http\Controllers\User\PendaftaranController;
+use App\Livewire\ChangePassword;
 use App\Livewire\PendaftaranForm;
-use App\Livewire\User\UserDashboard;
-use App\Livewire\DashboardRouter;
 use App\Livewire\Profile;
 
 // HC Livewire Components
 use App\Livewire\Hc\Dashboard as HcDashboard;
 use App\Livewire\Hc\DataPeserta;
-use App\Livewire\Hc\TinjauNanti;
-use App\Livewire\Hc\DokumenPeserta;
 use App\Livewire\Hc\ExportLaporan;
 use App\Livewire\Hc\Reminder;
 use App\Livewire\Hc\LowonganAvailability;
 use App\Livewire\Hc\DataMagang;
-
-use Laravel\Fortify\Fortify;
+use App\Livewire\Hc\Presensi;
+use App\Livewire\PresensiMenu;
 
 // Route landing page
 Route::get('/', function () {
@@ -34,7 +27,6 @@ Route::view('/forgot-password', 'livewire.auth.forgot-password')
     ->middleware('guest')
     ->name('password.request');
 
-
 // Route captcha
 Route::get('captcha', function () {
     return captcha_img();
@@ -44,8 +36,7 @@ Route::get('/reload-captcha', function () {
     return response()->json(['captcha' => captcha_img('numeric')]);
 });
 
-
-Route::middleware(['auth', 'role:user'])->group(function () {
+Route::middleware(['auth', 'role:user', 'check.attendance'])->group(function () {
 
     // Pendaftaran form
     Route::get('/pendaftaran', PendaftaranForm::class)->name('pendaftaran');
@@ -53,9 +44,15 @@ Route::middleware(['auth', 'role:user'])->group(function () {
     // Dashboard & detail
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
+    // Dashboard Presensi
+    Route::get('/presensi', PresensiMenu::class)
+        ->name('presensi');
+
     // Edit Profile
     Route::get('/profile', Profile::class)->name('profile');
 
+    // Change Password
+    Route::get('/change-password', ChangePassword::class)->name('change-password');
 });
 
 Route::middleware(['auth', 'role:hc'])->prefix('hc')->name('hc.')->group(function () {
@@ -71,6 +68,9 @@ Route::middleware(['auth', 'role:hc'])->prefix('hc')->name('hc.')->group(functio
     // Data Anak Magang
     Route::get('/data-magang', DataMagang::class)->name('data-magang');
 
+    //Presensi
+    Route::get('/presensi', Presensi::class)->name('presensi');
+
     // Export Data
     Route::get('/export', ExportLaporan::class)->name('export');
 
@@ -79,4 +79,4 @@ Route::middleware(['auth', 'role:hc'])->prefix('hc')->name('hc.')->group(functio
 });
 
 
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';

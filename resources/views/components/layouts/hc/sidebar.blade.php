@@ -30,6 +30,13 @@
             <span class="ml-3">Data Magang</span>
         </a>
 
+        {{-- Presensi --}}
+        <a href="{{ url('hc/presensi') }}" class="flex items-center px-4 py-2 rounded-2xl transition
+            {{ Request::is('hc/presensi') ? 'bg-red-100 text-red-700 font-semibold' : 'text-gray-700 hover:bg-red-50 hover:text-red-600' }}">
+            <i class="fas fa-calendar-check w-5 text-center"></i>
+            <span class="ml-3">Presensi</span>
+        </a>
+
         {{-- Lowongan --}}
         <a href="{{ url('hc/lowongan-availability') }}" class="flex items-center px-4 py-2 rounded-2xl transition
             {{ Request::is('hc/lowongan-availability') ? 'bg-red-100 text-red-700 font-semibold' : 'text-gray-700 hover:bg-red-50 hover:text-red-600' }}">

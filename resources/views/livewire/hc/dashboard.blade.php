@@ -59,8 +59,8 @@
         </div>
     </div>
 
-    <!-- Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Chart.js -->
     <script>
     document.addEventListener("DOMContentLoaded", function () {
         // Unit Chart (Donut)

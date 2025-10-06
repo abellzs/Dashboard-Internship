@@ -34,7 +34,7 @@ class DataPeserta extends Component
     public $selectedPeserta;
     public $waNumber = null;
     public $editDates = [];
-    
+
 
     public $confirmData = [
         'show' => false,
@@ -92,41 +92,55 @@ class DataPeserta extends Component
     {
         return MagangApplication::with('user')
             ->whereNotIn('status', ['on_going', 'done'])
-            ->when($this->search, function($q) {
-                $q->whereHas('user', function($u) {
+            ->when($this->search, function ($q) {
+                $q->whereHas('user', function ($u) {
                     $u->where('name', 'like', '%' . $this->search . '%')
-                    ->orWhere('nim_magang', 'like', '%' . $this->search . '%');
+                        ->orWhere('nim_magang', 'like', '%' . $this->search . '%');
                 });
             })
-            ->when($this->statusFilter, fn($q) =>
+            ->when(
+                $this->statusFilter,
+                fn($q) =>
                 $q->where('status', $this->statusFilter)
             )
-            ->when($this->unitFilter, fn($q) =>
+            ->when(
+                $this->unitFilter,
+                fn($q) =>
                 $q->where('unit_penempatan', $this->unitFilter)
             )
-            ->when($this->showFlagged, fn($q) =>
+            ->when(
+                $this->showFlagged,
+                fn($q) =>
                 $q->where('is_flagged', true)
             )
-            ->when($this->filter === 'waiting', fn($q) =>
+            ->when(
+                $this->filter === 'waiting',
+                fn($q) =>
                 $q->where('status', 'waiting')
             )
-            ->when($this->filter === 'accepted', fn($q) =>
+            ->when(
+                $this->filter === 'accepted',
+                fn($q) =>
                 $q->where('status', 'accepted')
             )
-            ->when($this->filter === 'rejected', fn($q) =>
+            ->when(
+                $this->filter === 'rejected',
+                fn($q) =>
                 $q->where('status', 'rejected')
             )
-            ->when($this->filter === 'flagged', fn($q) =>
+            ->when(
+                $this->filter === 'flagged',
+                fn($q) =>
                 $q->where('is_flagged', true)
             )
-            ->when($this->statusFilter === 'accepted', function($q) {
+            ->when($this->statusFilter === 'accepted', function ($q) {
                 $q->select('magang_applications.*', 'tanggal_mulai_usulan', 'tanggal_selesai_usulan');
             })
-            ->when($this->sortBy === 'user.name', function($q) {
+            ->when($this->sortBy === 'user.name', function ($q) {
                 $q->join('users', 'magang_applications.user_id', '=', 'users.id')
-                ->orderBy('users.name', $this->sortDirection)
-                ->select('magang_applications.*');
-            }, function($q) {
+                    ->orderBy('users.name', $this->sortDirection)
+                    ->select('magang_applications.*');
+            }, function ($q) {
                 $q->orderBy($this->sortBy, $this->sortDirection);
             });
     }
@@ -353,6 +367,36 @@ class DataPeserta extends Component
         return sprintf("%s%s%04d", $unitCode, $year, $nextNumber);
     }
 
+    public function generateAllNim()
+    {
+        try {
+            // Ambil semua user yang nim_magang-nya masih null dan punya magang application
+            $usersWithoutNim = \App\Models\User::whereNull('nim_magang')
+                ->whereHas('magangApplication', function ($q) {
+                    $q->whereIn('status', ['accepted', 'on_going', 'done']);
+                })
+                ->with('magangApplication')
+                ->get();
+
+            $generated = 0;
+
+            foreach ($usersWithoutNim as $user) {
+                $magang = $user->magangApplication->first();
+                if ($magang) {
+                    // Gunakan method generateNim yang sama seperti saat approved
+                    $nim = $this->generateNim($magang);
+                    $user->nim_magang = $nim;
+                    $user->save();
+                    $generated++;
+                }
+            }
+
+            $this->showToast("Berhasil generate {$generated} NIM untuk peserta yang belum memiliki NIM!");
+        } catch (\Exception $e) {
+            $this->showToast("Error: " . $e->getMessage());
+        }
+    }
+
     public function showToast($message)
     {
         $this->toastMessage = $message;
@@ -374,12 +418,12 @@ class DataPeserta extends Component
             return;
         }
 
-        $tanggalMulai = isset($this->editDates[$id]['tanggal_mulai_usulan']) 
-                        ? Carbon::parse($this->editDates[$id]['tanggal_mulai_usulan']) 
-                        : null;
-        $tanggalSelesai = isset($this->editDates[$id]['tanggal_selesai_usulan']) 
-                        ? Carbon::parse($this->editDates[$id]['tanggal_selesai_usulan']) 
-                        : null;
+        $tanggalMulai = isset($this->editDates[$id]['tanggal_mulai_usulan'])
+            ? Carbon::parse($this->editDates[$id]['tanggal_mulai_usulan'])
+            : null;
+        $tanggalSelesai = isset($this->editDates[$id]['tanggal_selesai_usulan'])
+            ? Carbon::parse($this->editDates[$id]['tanggal_selesai_usulan'])
+            : null;
 
         // Validasi logika
         if ($field === 'tanggal_mulai_usulan' && $tanggalSelesai && $newDateCarbon->gt($tanggalSelesai)) {
@@ -431,7 +475,6 @@ class DataPeserta extends Component
             'flaggedCount' => MagangApplication::where('is_flagged', true)->count(),
             'unitList' => Lowongan::select('nama_unit')->distinct()->pluck('nama_unit')
         ])->extends('components.layouts.hc.app')
-        ->section('content');
+            ->section('content');
     }
-
 }

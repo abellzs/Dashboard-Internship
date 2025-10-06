@@ -9,8 +9,8 @@
 
     {{-- Header --}}
     <div>
-        <h2 class="text-2xl md:text-3xl font-bold pb-10 text-[#DA291C]">
-            Selamat datang, <strong>{{ $user->name }}</strong>
+        <h2 class="text-2xl md:text-3xl font-bold pb-5 text-[#DA291C]">
+            Selamat datang,</br> <strong>{{ $user->name }}</strong> </br>{{ $user->nim_magang ? '('.$user->nim_magang.')' : '' }}
         </h2>
     </div>
 

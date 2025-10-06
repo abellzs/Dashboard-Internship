@@ -2,17 +2,19 @@
 
 namespace App\Livewire;
 
+use App\Models\Attendance;
 use Livewire\Component;
 use Illuminate\Support\Facades\Auth;
 use App\Models\UserProfile;
 use App\Models\MagangApplication;
 use App\Models\MagangDocument;
+use Carbon\Carbon;
 use Livewire\WithFileUploads;
 
 class UserDashboard extends Component
 {
     use WithFileUploads;
-    
+
     public $user;
     public $user_profile;
     public $magangAktif;
@@ -84,7 +86,7 @@ class UserDashboard extends Component
         $path = $this->newDocument->store('documents', 'public');
 
         // Ambil dokumen berdasarkan application_id
-        $doc = $this->detailMagang->document; 
+        $doc = $this->detailMagang->document;
 
         if (!$doc) {
             // Kalau belum ada, buat baru untuk application ini
