@@ -43,10 +43,46 @@ class PresensiMenu extends Component
         if (!$this->user) {
             return redirect()->back()->with('error', 'User not authenticated.');
         }
-        $officeStart = '08:00:00';
+        $officeStart = '08:01:00';
+        $radius = 200;
+
+        // Ambil unit penempatan user
+        $unit = $this->userUnit;
+
+        // Default koordinat Kota Baru
         $officeLat = -7.7863;
         $officeLng = 110.3749;
-        $radius = 200;
+        $userLat = $this->latitude;
+        $userLng = $this->longitude;
+
+        // Cek unit penempatan dan ambil koordinat dari tabel lowongans
+        if ($unit) {
+            $lowongan = \App\Models\Lowongan::where('nama_unit', $unit)->first();
+            if ($lowongan !== null) {
+                if (
+                    str_contains($lowongan->lokasi, 'Bantul') ||
+                    str_contains($lowongan->lokasi, 'Sleman') ||
+                    str_contains($lowongan->lokasi, 'Gunung Kidul')
+                ) {
+                    $distance = $this->distance(-7.7863, 110.3749, $userLat, $userLng);
+                    if ($distance > $radius) {
+                        if (str_contains($lowongan->lokasi, 'Bantul')) {
+                            $officeLat = -7.892670;
+                            $officeLng = 110.335484;
+                        } elseif (str_contains($lowongan->lokasi, 'Sleman')) {
+                            $officeLat = -7.715003;
+                            $officeLng = 110.356041;
+                        } elseif (str_contains($lowongan->lokasi, 'Gunung Kidul')) {
+                            $officeLat = -7.967102;
+                            $officeLng = 110.602979;
+                        }
+                    }
+                }
+            } else {
+                $officeLat = -7.7863;
+                $officeLng = 110.3749;
+            }
+        }
 
         // Cek hari Sabtu/Minggu
         $dayOfWeek = Carbon::parse($this->today)->dayOfWeekIso; // 6=Sabtu, 7=Minggu
@@ -91,19 +127,6 @@ class PresensiMenu extends Component
             return redirect()->back()->with('success', 'Check-in berhasil dengan status: ' . $this->status);
         }
 
-        $userLat = $this->latitude;
-        $userLng = $this->longitude;
-        if (!$userLat || !$userLng) {
-            return redirect()->back()->with('error', 'Lokasi tidak terdeteksi.');
-        }
-
-        $distance = $this->distance($officeLat, $officeLng, $userLat, $userLng);
-
-        if ($distance > $radius) {
-            return redirect()->back()->with('error', 'Anda di luar area, check-in gagal. User lokasi: ' . $userLat . ', ' . $userLng);
-        }
-
-        // Status Hadir/Terlambat wajib cek lokasi
         if (!$userLat || !$userLng) {
             return redirect()->back()->with('error', 'Lokasi tidak terdeteksi.');
         }

@@ -34,6 +34,7 @@ class MagangExport implements FromCollection, WithHeadings
 
         return $query->get()->map(function ($item) {
             return [
+                'NIM'=> $item->user->nim_magang ?? '-',
                 'Nama' => $item->user->name ?? '-',
                 'Email' => $item->user->email ?? '-',
                 'Status' => ucfirst(str_replace('_', ' ', $item->status)),
@@ -51,6 +52,7 @@ class MagangExport implements FromCollection, WithHeadings
     public function headings(): array
     {
         return [
+            'NIM',
             'Nama',
             'Email',
             'Status',

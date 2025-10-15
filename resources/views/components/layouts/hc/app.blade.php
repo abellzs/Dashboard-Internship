@@ -9,6 +9,8 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     {{-- Livewire Styles --}}
     @livewireStyles
@@ -24,12 +26,12 @@
     {{-- Header --}}
     @include('components.layouts.hc.header')
 
-    <div class="flex min-h-screen">
+    <div class="flex min-h-screen overflow-hidden">
         {{-- Sidebar --}}
         @include('components.layouts.hc.sidebar')
 
         {{-- Main Content --}}
-        <main class="flex-1 p-6">
+        <main class="flex-1 p-4 sm:p-6 overflow-x-hidden min-w-0">
             @yield('content')
             {{ $slot ?? '' }}
         </main>

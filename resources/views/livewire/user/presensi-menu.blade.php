@@ -69,7 +69,7 @@
                             </svg>
                             Lokasi Saat Ini
                         </h2>
-                        <div id="map" wire:ignore class="w-full h-64 bg-gray-100 rounded-lg border border-gray-200"></div>
+                        <div id="map" wire:ignore class="z-10 w-full h-64 bg-gray-100 rounded-lg border border-gray-200"></div>
                         <div class="mt-3 text-xs text-gray-500 text-center">
                             <span>Lat: {{ $latitude ?? 'Detecting...' }} | Lng: {{ $longitude ?? 'Detecting...' }}</span>
                         </div>

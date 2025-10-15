@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="id"><head><meta charset="UTF-8"><title>Sertifikat Telkom Indonesia</title><style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        @page {
+            size: A4 landscape;
+            margin: 0;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'DejaVu Sans', Arial, sans-serif;
+            background-color: #e5e7eb;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .certif-container {
+            position: relative;
+            width: 297mm;
+            height: 210mm;
+            max-width: 100vw;
+            max-height: 100vh;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            border: 1px solid #d1d5db;
+            background-image: url('D:\laragon\www\Dashboard-Internship\public\images/certif_bg.png');
+            background-size: contain;
+            background-position: center;
+            background-repeat: no-repeat;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            page-break-inside: avoid;
+        }
+
+        .certif-content {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            font-family: 'Times New Roman', Times, serif;
+        }
+
+        .certif-header {
+            margin-bottom: 24px;
+            margin-top: 120px;
+        }
+
+        .certif-title {
+            font-style: italic;
+            margin-bottom: 16px;
+            font-size: 70px;
+            font-family: 'Times New Roman', Times, serif;
+            line-height: 1;
+        }
+
+        .certif-number {
+            font-size: 20px;
+            font-family: 'Times New Roman', Times, serif;
+        }
+
+        .certif-body {
+            margin-bottom: 32px;
+        }
+
+        .certif-label {
+            font-size: 14px;
+            font-family: 'Times New Roman', Times, serif;
+            margin-bottom: 8px;
+        }
+
+        .certif-name {
+            font-size: 30px;
+            font-weight: bold;
+            margin-bottom: 8px;
+            line-height: 1.2;
+        }
+
+        .certif-description {
+            font-size: 18px;
+            max-width: 768px;
+            margin-left: auto;
+            margin-right: auto;
+            line-height: 1.5;
+        }
+
+        .certif-footer {
+            margin-left: 8px;
+            margin-right: 8px;
+        }
+
+        .certif-date {
+            font-size: 18px;
+            margin-bottom: 16px;
+        }
+
+        .certif-position-1 {
+            margin-top: 16px;
+            font-weight: bold;
+            font-size: 18px;
+            font-family: 'Times New Roman', Times, serif;
+        }
+
+        .certif-position-2 {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            font-family: 'Times New Roman', Times, serif;
+        }
+
+        .certif-signature {
+            width: 144px;
+            margin-left: auto;
+            margin-right: auto;
+            display: block;
+        }
+
+        .certif-name-sign {
+            text-decoration: underline;
+            font-weight: bold;
+            font-size: 18px;
+            margin-top: 5px;
+            margin-bottom: 5px;
+        }
+
+        .certif-nik {
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        @media print {
+            body {
+                margin: 0 !important;
+                padding: 0 !important;
+                width: 100vw !important;
+                height: 100vh !important;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+            }
+
+            .certif-container {
+                margin: 0 auto !important;
+                box-shadow: none;
+                border: none;
+            }
+        }
+    </style></head><body>
+    <div class="certif-container">
+        <div class="certif-content">
+            <!-- Judul Sertifikat -->
+            <div class="certif-header">
+                <h1 class="certif-title">Sertifikat</h1>
+                <p class="certif-number">Nomor: Tel.336/PS 000/T3W-0G0O0000/2025</p>
+            </div>
+
+            <!-- Isi Sertifikat -->
+            <div class="certif-body">
+                <p class="certif-label">Diberikan Kepada:</p>
+                <h2 class="certif-name">
+                    ANGGORO WIJAYANTO                </h2>
+                <p class="certif-description">
+                    Atas peran serta dalam pelaksanaan<br>
+                    Internship di <strong>PT. TELKOM INDONESIA (Persero), Tbk Witel Yogya Jateng Selatan</strong><br>
+                    yang dilaksanakan pada tanggal <strong>06 October 2025</strong> s/d
+                    <strong>30 January 2026</strong>.
+                </p>
+            </div>
+
+            <!-- Tanggal & TTD -->
+            <div class="certif-footer">
+                <p class="certif-date">Yogyakarta, 13 October 2025</p>
+                <p class="certif-position-1">Telkom Witel Yogya Jateng Selatan</p>
+                <p class="certif-position-2">Manager Shared Service &amp; General Support</p>
+                <img src="D:\laragon\www\Dashboard-Internship\public\images/ttd-mba-rama-1.png" alt="Tanda Tangan" class="certif-signature">
+                <p class="certif-name-sign">Rama Kumala Sari</p>
+                <p class="certif-nik">NIK. 810120</p>
+            </div>
+        </div>
+    </div>
+</body></html>

@@ -38,6 +38,14 @@ class DataMagang extends Component
     public $editDates = [];
     protected $listeners = ['updateTanggal'];
 
+    public $showEditModal = false;
+    public $editMagangData = [
+        'id' => null,
+        'nim_magang' => '',
+        'name' => '',
+        'unit_penempatan' => '',
+    ];
+
     public $confirmData = [
         'show' => false,
         'title' => '',
@@ -198,6 +206,70 @@ class DataMagang extends Component
         }
 
         $this->showToast("Tanggal & status berhasil diperbarui!");
+    }
+
+    public function editMagang($id)
+    {
+        $magang = MagangApplication::with('user')->find($id);
+        
+        if (!$magang) {
+            $this->showToast('Data tidak ditemukan');
+            return;
+        }
+
+        $this->editMagangData = [
+            'id' => $magang->id,
+            'nim_magang' => $magang->user->nim_magang ?? '',
+            'name' => $magang->user->name ?? '',
+            'unit_penempatan' => $magang->unit_penempatan ?? '',
+        ];
+
+        $this->showEditModal = true;
+    }
+
+    public function updateMagang()
+    {
+        $this->validate([
+            'editMagangData.nim_magang' => 'required|string',
+            'editMagangData.name' => 'required|string',
+            'editMagangData.unit_penempatan' => 'required|string',
+        ], [
+            'editMagangData.nim_magang.required' => 'NIM wajib diisi',
+            'editMagangData.name.required' => 'Nama wajib diisi',
+            'editMagangData.unit_penempatan.required' => 'Unit penempatan wajib diisi',
+        ]);
+
+        $magang = MagangApplication::find($this->editMagangData['id']);
+        
+        if (!$magang || !$magang->user) {
+            $this->showToast('Data tidak ditemukan');
+            return;
+        }
+
+        // Update user data
+        $magang->user->update([
+            'nim_magang' => $this->editMagangData['nim_magang'],
+            'name' => $this->editMagangData['name'],
+        ]);
+
+        // Update magang application
+        $magang->update([
+            'unit_penempatan' => $this->editMagangData['unit_penempatan'],
+        ]);
+
+        $this->showEditModal = false;
+        $this->showToast('Data berhasil diperbarui!');
+    }
+
+    public function closeEditModal()
+    {
+        $this->showEditModal = false;
+        $this->reset('editMagangData');
+    }
+
+    public function cetakCertificate($id)
+    {
+        return redirect()->route('certificate');
     }
 
     public function render()

@@ -27,7 +27,7 @@
         <a href="{{ url('hc/data-magang') }}" class="flex items-center px-4 py-2 rounded-2xl transition
             {{ Request::is('hc/data-magang') ? 'bg-red-100 text-red-700 font-semibold' : 'text-gray-700 hover:bg-red-50 hover:text-red-600' }}">
             <i class="fas fa-users w-5 text-center"></i>
-            <span class="ml-3">Data Magang</span>
+            <span class="ml-3">Data Internship</span>
         </a>
 
         {{-- Presensi --}}
@@ -42,6 +42,13 @@
             {{ Request::is('hc/lowongan-availability') ? 'bg-red-100 text-red-700 font-semibold' : 'text-gray-700 hover:bg-red-50 hover:text-red-600' }}">
             <i class="fas fa-file-alt w-5 text-center"></i>
             <span class="ml-3">Ketersediaan Unit</span>
+        </a>
+
+        {{-- Sertifikat --}}
+        <a href="{{ url('hc/data-sertifikat') }}" class="flex items-center px-4 py-2 rounded-2xl transition
+            {{ Request::is('hc/data-sertifikat') ? 'bg-red-100 text-red-700 font-semibold' : 'text-gray-700 hover:bg-red-50 hover:text-red-600' }}">
+            <i class="fas fa-certificate w-5 text-center"></i>
+            <span class="ml-3">Data Sertifikat</span>
         </a>
         
         {{-- Export Laporan --}}

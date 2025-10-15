@@ -12,6 +12,7 @@ use App\Mail\MagangAcceptedMail;
 use App\Mail\MagangRejectedMail;
 use Carbon\Carbon;
 use App\Models\Lowongan;
+use Illuminate\Support\Facades\DB;
 
 class DataPeserta extends Component
 {
@@ -34,6 +35,7 @@ class DataPeserta extends Component
     public $selectedPeserta;
     public $waNumber = null;
     public $editDates = [];
+    protected $unitCodes = [];
 
 
     public $confirmData = [
@@ -47,22 +49,16 @@ class DataPeserta extends Component
 
     protected $paginationTheme = 'tailwind';
 
-    // Satukan ke satu map, pakai ini
-    protected $unitCodes = [
-        'Human Capital' => '01',
-        'Sekretaris' => '02',
-        'Asset & Facility' => '03',
-        'Financial Collection' => '04',
-        'Business Service' => '05',
-        'Government Service' => '06',
-        'Enterprise Service' => '07',
-        'Performance, Risk & QOS (PRQ)' => '08',
-        'BGES & MBB Service Operation' => '09',
-        'HOTD (Head of Telkom Daerah Gunung Kidul)' => '10',
-        'HOTD (Head of Telkom Daerah Sleman)' => '11',
-        'HOTD (Head of Telkom Daerah Bantul)' => '12',
-        'Telkom Infrastruktur (TIF)' => '13',
-    ];
+    public function mount()
+    {
+        // Ambil semua unit unik dari tabel lowongans
+        $units = Lowongan::select('nama_unit')->distinct()->pluck('nama_unit')->toArray();
+
+        // Generate kode otomatis (misal: 01, 02, dst)
+        foreach ($units as $i => $unit) {
+            $this->unitCodes[$unit] = str_pad($i + 1, 2, '0', STR_PAD_LEFT);
+        }
+    }
 
     public function updating($field)
     {
@@ -352,39 +348,52 @@ class DataPeserta extends Component
 
     protected function generateNim(MagangApplication $magang)
     {
-        $unitCode = $this->unitCodes[$magang->unit_penempatan] ?? '00';
+        // Ambil semua unit unik dari tabel lowongans
+        $units = Lowongan::select('nama_unit')->distinct()->pluck('nama_unit')->toArray();
+
+        // Cari index unit sekarang
+        $unitIndex = array_search($magang->unit_penempatan, $units);
+
+        // Jika unit tidak ditemukan, pakai '00'
+        $unitCode = $unitIndex !== false ? str_pad($unitIndex + 1, 2, '0', STR_PAD_LEFT) : '00';
+
         $year = date('y');
 
         // Cari NIM terakhir untuk unit & tahun ini
-        $lastNim = \DB::table('users')
+        $lastNim = DB::table('users')
             ->where('nim_magang', 'like', $unitCode . $year . '%')
             ->max('nim_magang');
 
-        // Ambil 4 digit terakhir, convert ke integer, lalu +1
         $nextNumber = $lastNim ? (intval(substr($lastNim, -4)) + 1) : 1;
 
-        // Format NIM: unitCode + tahun + 4 digit urut
         return sprintf("%s%s%04d", $unitCode, $year, $nextNumber);
     }
 
     public function generateAllNim()
     {
         try {
-            // Ambil semua user yang nim_magang-nya masih null dan punya magang application
+            // Ambil user yang belum punya NIM dan punya application
             $usersWithoutNim = \App\Models\User::whereNull('nim_magang')
                 ->whereHas('magangApplication', function ($q) {
                     $q->whereIn('status', ['accepted', 'on_going', 'done']);
                 })
-                ->with('magangApplication')
+                ->with(['magangApplication' => function ($q) {
+                    // Ambil application terbaru (berdasarkan created_at atau approved_at)
+                    $q->whereIn('status', ['accepted', 'on_going', 'done'])
+                        ->orderBy('approved_at', 'desc')
+                        ->orderBy('created_at', 'desc');
+                }])
                 ->get();
 
             $generated = 0;
 
             foreach ($usersWithoutNim as $user) {
-                $magang = $user->magangApplication->first();
-                if ($magang) {
-                    // Gunakan method generateNim yang sama seperti saat approved
-                    $nim = $this->generateNim($magang);
+                // Ambil application terbaru (index 0 karena sudah di-order)
+                $latestMagang = $user->magangApplication->first();
+
+                if ($latestMagang) {
+                    // Generate NIM berdasarkan unit_penempatan dari application terbaru
+                    $nim = $this->generateNim($latestMagang);
                     $user->nim_magang = $nim;
                     $user->save();
                     $generated++;

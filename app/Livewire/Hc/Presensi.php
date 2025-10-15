@@ -22,19 +22,26 @@ class Presensi extends Component
 
     public function render()
     {
-        $query = \App\Models\Attendance::with('user');
+        if ($this->filter === 'Belum Hadir') {
+            $this->filterBelumHadirHariIni();
+            $attendances = $this->attendances ?? collect();
+        } else {
+            $query = \App\Models\Attendance::with('user')
+            ->orderBy('date', 'desc')
+            ->orderBy('check_in', 'desc');
 
-        if (!empty($this->search)) {
-            $query->whereHas('user', function ($q) {
-                $q->where('name', 'like', '%' . $this->search . '%');
-            });
+            if (!empty($this->search)) {
+                $query->whereHas('user', function ($q) {
+                    $q->where('name', 'like', '%' . $this->search . '%');
+                });
+            }
+
+            if ($this->filter !== 'all') {
+                $query->where('status', $this->filter);
+            }
+
+            $attendances = $query->paginate($this->perPage);
         }
-
-        if ($this->filter !== 'all') {
-            $query->where('status', $this->filter);
-        }
-
-        $attendances = $query->paginate($this->perPage);
 
         return view('livewire.hc.presensi', [
             'attendances' => $attendances,
@@ -54,7 +61,9 @@ class Presensi extends Component
 
     private function filterData()
     {
-        $query = \App\Models\Attendance::with('user');
+        $query = \App\Models\Attendance::with('user')
+            ->orderBy('date', 'desc')
+            ->orderBy('check_in', 'desc');
 
         // Filter berdasarkan search
         if (!empty($this->search)) {
@@ -66,6 +75,32 @@ class Presensi extends Component
         // Filter berdasarkan status
         if ($this->filter !== 'all') {
             $query->where('status', $this->filter);
+        }
+
+        $this->attendances = $query->paginate($this->perPage);
+    }
+
+    public function filterBelumHadirHariIni()
+    {
+        $today = now()->toDateString();
+
+        // Ambil semua user magang aktif
+        $userMagangIds = \App\Models\MagangApplication::where('status', 'on_going')
+            ->pluck('user_id')
+            ->toArray();
+
+        // Ambil user yang sudah presensi hari ini
+        $hadirIds = \App\Models\Attendance::whereDate('date', $today)
+            ->pluck('user_id')
+            ->toArray();
+
+        // Query user yang belum presensi hari ini dan bisa di paginate
+        $query = \App\Models\User::whereIn('id', $userMagangIds)
+            ->whereNotIn('id', $hadirIds);
+
+        // Tambahkan filter search
+        if (!empty($this->search)) {
+            $query->where('name', 'like', '%' . $this->search . '%');
         }
 
         $this->attendances = $query->paginate($this->perPage);

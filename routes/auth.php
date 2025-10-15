@@ -8,7 +8,7 @@ use Livewire\Volt\Volt;
 use App\Livewire\Auth\Register;
 use App\Livewire\PresensiMenu;
 
-Route::middleware('guest')->group(function () {
+Route::middleware(['guest'])->group(function () {
     Volt::route('login', 'auth.login')
         ->name('login');
 

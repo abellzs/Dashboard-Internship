@@ -12,8 +12,7 @@ use Livewire\Attributes\Validate;
 use Livewire\Volt\Component;
 
 new #[Layout('components.layouts.guest')] class extends Component {
-
-    #[Validate('required|string|email')]
+    #[Validate('required|string')]
     public string $email = '';
 
     #[Validate('required|string')]
@@ -29,7 +28,7 @@ new #[Layout('components.layouts.guest')] class extends Component {
     public function login(): void
     {
         $this->validate([
-            'email' => 'required|email',
+            'email' => 'required|string',
             'password' => 'required',
             'captcha' => 'required',
         ]);
@@ -41,8 +40,11 @@ new #[Layout('components.layouts.guest')] class extends Component {
             ]);
         }
 
+        $isEmail = filter_var($this->email, FILTER_VALIDATE_EMAIL) !== false;
+        $credentials = $isEmail ? ['email' => $this->email, 'password' => $this->password] : ['nim_magang' => $this->email, 'password' => $this->password];
+
         // Lanjut login biasa
-        if (!Auth::attempt(['email' => $this->email, 'password' => $this->password], $this->remember)) {
+        if (!Auth::attempt($credentials, $this->remember)) {
             throw ValidationException::withMessages([
                 'email' => 'Email atau password salah.',
             ]);
@@ -62,7 +64,6 @@ new #[Layout('components.layouts.guest')] class extends Component {
         } else {
             $this->redirect(route('dashboard', absolute: false), navigate: true);
         }
-
     }
 
     public string $captchaImg = '';
@@ -82,7 +83,7 @@ new #[Layout('components.layouts.guest')] class extends Component {
      */
     protected function ensureIsNotRateLimited(): void
     {
-        if (! RateLimiter::tooManyAttempts($this->throttleKey(), 5)) {
+        if (!RateLimiter::tooManyAttempts($this->throttleKey(), 5)) {
             return;
         }
 
@@ -103,7 +104,7 @@ new #[Layout('components.layouts.guest')] class extends Component {
      */
     protected function throttleKey(): string
     {
-        return Str::transliterate(Str::lower($this->email).'|'.request()->ip());
+        return Str::transliterate(Str::lower($this->email) . '|' . request()->ip());
     }
 }; ?>
 
@@ -121,42 +122,39 @@ new #[Layout('components.layouts.guest')] class extends Component {
         </div>
 
         {{-- Kanan: Form Login --}}
-        <div class="w-full max-w-xl ml-auto mr-32 bg-white border border-gray-200 rounded-xl shadow-md p-6 md:p-10 space-y-6 md:space-y-8">
+        <div
+            class="w-full max-w-xl ml-auto mr-32 bg-white border border-gray-200 rounded-xl shadow-md p-6 md:p-10 space-y-6 md:space-y-8">
 
             <x-auth-session-status class="text-center" :status="session('status')" />
 
             <form wire:submit="login" class="space-y-5 md:space-y-6">
                 {{-- Email --}}
                 <div>
-                    <label for="email" class="block text-sm md:text-base font-medium">Email</label>
-                    <input wire:model="email" type="email" id="email" required
+                    <label for="email" class="block text-sm md:text-base font-medium">NIM / Email</label>
+                    <input wire:model="email" type="text" id="email" required
                         class="mt-2 w-full px-4 py-2 md:py-3 border border-gray-300 rounded-md shadow-sm text-sm md:text-base focus:outline-none focus:ring-2 focus:ring-red-500"
-                        placeholder="Contoh: email@witelyjs.com">
-                    @error('email') <p class="text-sm text-red-500 mt-1">{{ $message }}</p> @enderror
+                        placeholder="NIM atau Email (contoh: email@ssgs.com)">
+                    @error('email')
+                        <p class="text-sm text-red-500 mt-1">{{ $message }}</p>
+                    @enderror
                 </div>
 
                 {{-- Password --}}
                 <div x-data="{ show: false }" class="relative">
                     <label for="password" class="block text-sm md:text-base font-medium">Password</label>
-                    
+
                     <div class="relative mt-2">
-                        <input 
-                            wire:model="password"
-                            :type="show ? 'text' : 'password'"
-                            id="password"
-                            required
+                        <input wire:model="password" :type="show ? 'text' : 'password'" id="password" required
                             class="w-full px-4 py-2 md:py-3 border border-gray-300 rounded-md shadow-sm text-sm md:text-base focus:outline-none focus:ring-2 focus:ring-red-500"
-                            placeholder="Masukkan password"
-                        >
+                            placeholder="Masukkan password">
 
                         <!-- Tombol Toggle -->
-                        <button type="button"
-                            @click="show = !show"
+                        <button type="button" @click="show = !show"
                             class="absolute inset-y-0 right-2 flex items-center justify-center w-12 text-gray-400 hover:text-red-500 transition duration-200 ease-in-out">
                             <template x-if="show">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none"
                                     viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
-                                    <path stroke-linecap="round" stroke-linejoin="round" 
+                                    <path stroke-linecap="round" stroke-linejoin="round"
                                         d="M1.5 12s4-7.5 10.5-7.5S22.5 12 22.5 12s-4 7.5-10.5 7.5S1.5 12 1.5 12z" />
                                     <circle cx="12" cy="12" r="3" />
                                 </svg>
@@ -164,7 +162,7 @@ new #[Layout('components.layouts.guest')] class extends Component {
                             <template x-if="!show">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none"
                                     viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
-                                    <path stroke-linecap="round" stroke-linejoin="round" 
+                                    <path stroke-linecap="round" stroke-linejoin="round"
                                         d="M3 3l18 18M10.5 10.5a3 3 0 014.243 4.243M1.5 12s4-7.5 10.5-7.5a10.48 10.48 0 018.486 4.223M19.071 19.071A10.478 10.478 0 0112 19.5C6 19.5 1.5 12 1.5 12c1.178-2.209 3.014-4.151 5.277-5.492" />
                                 </svg>
                             </template>
@@ -187,12 +185,9 @@ new #[Layout('components.layouts.guest')] class extends Component {
                         </button>
                     </div>
                     <div class="flex-1">
-                        <input
-                            wire:model.defer="captcha"
-                            name="captcha"
+                        <input wire:model.defer="captcha" name="captcha"
                             class="w-full px-4 py-2 md:py-3 border border-gray-300 rounded-md text-sm md:text-base"
-                            type="text"
-                            placeholder="Insert Captcha">
+                            type="text" placeholder="Insert Captcha">
                         @error('captcha')
                             <div class="text-red-500 text-sm mt-1">{{ $message }}</div>
                         @enderror
@@ -200,7 +195,7 @@ new #[Layout('components.layouts.guest')] class extends Component {
                 </div>
 
                 <script>
-                    document.getElementById('reload').addEventListener('click', function () {
+                    document.getElementById('reload').addEventListener('click', function() {
                         fetch('/reload-captcha')
                             .then(res => res.json())
                             .then(data => {
@@ -227,11 +222,13 @@ new #[Layout('components.layouts.guest')] class extends Component {
                 {{-- Link tambahan --}}
                 <div class="flex justify-between text-xs md:text-sm mt-2">
                     @if (Route::has('password.request'))
-                        <a href="{{ route('password.request') }}" class="text-gray-600 hover:underline">Lupa password?</a>
+                        <a href="{{ route('password.request') }}" class="text-gray-600 hover:underline">Lupa
+                            password?</a>
                     @endif
                     @if (Route::has('register'))
                         <span class="text-gray-600">
-                            <a href="{{ route('register') }}" class="text-blue-600 font-medium hover:underline">Daftar di sini</a>
+                            <a href="{{ route('register') }}" class="text-blue-600 font-medium hover:underline">Daftar
+                                di sini</a>
                         </span>
                     @endif
                 </div>

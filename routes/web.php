@@ -4,7 +4,9 @@ use Illuminate\Support\Facades\Route;
 
 // User Controller & Livewire
 use App\Http\Controllers\User\DashboardController;
+use App\Livewire\Certificate\CertificateTemplate;
 use App\Livewire\ChangePassword;
+use App\Livewire\DataSertifikat;
 use App\Livewire\PendaftaranForm;
 use App\Livewire\Profile;
 
@@ -15,6 +17,7 @@ use App\Livewire\Hc\ExportLaporan;
 use App\Livewire\Hc\Reminder;
 use App\Livewire\Hc\LowonganAvailability;
 use App\Livewire\Hc\DataMagang;
+use App\Livewire\Hc\DataSertifikat as HcDataSertifikat;
 use App\Livewire\Hc\Presensi;
 use App\Livewire\PresensiMenu;
 
@@ -22,6 +25,14 @@ use App\Livewire\PresensiMenu;
 Route::get('/', function () {
     return view('Landing');
 })->name('home');
+
+Route::get('/preview-nota-dinas-keluar', function () {
+    return view('certificate.nota-dinas-keluar');
+})->name('preview.nota-dinas-keluar');
+
+Route::get('/preview-nota-dinas-masuk', function () {
+    return view('certificate.nota-dinas-masuk');
+})->name('preview.nota-dinas-masuk');
 
 Route::view('/forgot-password', 'livewire.auth.forgot-password')
     ->middleware('guest')
@@ -70,6 +81,9 @@ Route::middleware(['auth', 'role:hc'])->prefix('hc')->name('hc.')->group(functio
 
     //Presensi
     Route::get('/presensi', Presensi::class)->name('presensi');
+
+    //Sertifikat
+    Route::get('/data-sertifikat', HcDataSertifikat::class)->name('data-sertifikat');
 
     // Export Data
     Route::get('/export', ExportLaporan::class)->name('export');

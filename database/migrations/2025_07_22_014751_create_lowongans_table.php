@@ -10,6 +10,7 @@ return new class extends Migration {
             $table->id();
             $table->string('nama_unit');
             $table->text('deskripsi');
+            $table->string('pembimbing');
             $table->text('major');
             $table->ENUM('ketersediaan', ['Tersedia', 'Tidak Tersedia'])->default('Tersedia');
             $table->integer('durasi')->nullable(); // Durasi dalam bulan

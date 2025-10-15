@@ -8,17 +8,25 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\Attendance;
 use App\Models\MagangApplication;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Hash;
 
 class CheckAttendance
 {
     public function handle(Request $request, Closure $next)
     {
         // Skip jika user belum login atau di halaman presensi
-        if (!Auth::check() || $request->is('presensi*')) {
+        if (!Auth::check() || $request->is('change-password*')) {
             return $next($request);
         }
 
-        $userId = Auth::id();
+        $user = Auth::user();
+        $userId = $user->id;
+
+        // Cek apakah password masih default (password123)
+        if (Hash::check('password123', $user->password)) {
+            return redirect()->route('change-password')
+                ->with('warning', 'Silakan ubah password default Anda terlebih dahulu untuk keamanan akun.');
+        }
         
         // Cek apakah user memiliki magang on_going
         $hasOnGoingMagang = MagangApplication::where('user_id', $userId)
@@ -31,7 +39,7 @@ class CheckAttendance
                 ->whereDate('date', Carbon::today())
                 ->exists();
 
-            if (!$alreadyCheckedIn) {
+            if (!$alreadyCheckedIn && !$request->is('presensi*')) {
                 return redirect('/presensi')->with('warning', 'Silakan lakukan presensi terlebih dahulu.');
             }
         }
